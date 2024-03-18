@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator anim;
+    private Rigidbody rbPlayer;
     private bool isGrounded = true;
+    private float jumpForce = 5f;
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
-        StartCoroutine("JumpCoroutine");
+        rbPlayer = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -23,17 +26,17 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
             anim.SetBool("isGrounded", isGrounded);
         }
-     
+        Jump();
+
     }
 
-    IEnumerator JumpCoroutine()
+    private void Jump()
     {
-        yield return new WaitForSeconds(2);
-        while (true)
+        if (Input.GetButtonDown("Jump"))
         {
             isGrounded = false;
             anim.SetBool("isGrounded", isGrounded);
-            yield return new WaitForSeconds(5);
+            rbPlayer.velocity = Vector3.up * jumpForce;
         }
     }
 }
